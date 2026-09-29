@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LearnVerse - Online Learning Platform | FSJ Project</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<header class="header">
+<div class="nav-container">
+<div class="logo"><i class="fas fa-graduation-cap"></i> LearnVerse</div>
+<nav class="nav-links">
+<a class="active" onclick="showSection('home')">Home</a>
+<a onclick="showSection('courses')">Courses</a>
+<a onclick="showSection('mycourses')">My Learning <span id="enrolledCount">0</span></a>
+</nav>
+<div class="nav-actions">
+<div class="search-box"><input id="searchInput" placeholder="Search courses..." onkeyup="searchCourses()"><i class="fas fa-search"></i></div>
+<button class="btn-login" id="loginBtn" onclick="openLogin()"><i class="fas fa-user"></i> Login</button>
+<button class="admin-btn" onclick="openAdmin()"><i class="fas fa-cog"></i></button>
+</div>
+</div>
+</header>
+
+<section id="home" class="section active">
+<div class="hero">
+<div class="hero-content">
+<span class="badge"> #1 Learning Platform 2026</span>
+<h1>Learn Skills That <span>Shape Your Future</span></h1>
+<p>Browse 12+ expert courses, enroll instantly, track progress, earn certificates. Built for FSJ Full Stack Java Internship.</p>
+<div class="hero-stats"><div><strong>12+</strong> Courses</div><div><strong>5k+</strong> Students</div><div><strong>98%</strong> Completion</div></div>
+<button class="btn-primary" onclick="showSection('courses')">Explore Courses <i class="fas fa-arrow-right"></i></button>
+</div>
+<div class="hero-image"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600"></div>
+</div>
+<div class="container"><div class="section-header"><h2>Featured Courses</h2><p>Handpicked by experts</p></div><div id="featuredCourses" class="course-grid"></div></div>
+</section>
+
+<section id="courses" class="section">
+<div class="container">
+<div class="section-header"><h2>All Courses</h2><p>Browse, filter and enroll</p></div>
+<div class="filters">
+<button class="filter-btn active" data-cat="All" onclick="filterCat('All')">All</button>
+<button class="filter-btn" data-cat="Java" onclick="filterCat('Java')">Java</button>
+<button class="filter-btn" data-cat="Web" onclick="filterCat('Web')">Web Dev</button>
+<button class="filter-btn" data-cat="Python" onclick="filterCat('Python')">Python</button>
+<button class="filter-btn" data-cat="Data" onclick="filterCat('Data')">Data Science</button>
+<select id="durationFilter" onchange="applyFilters()"><option value="All">All Durations</option><option value="short">< 5 hours</option><option value="medium">5-10 hours</option><option value="long">10+ hours</option></select>
+</div>
+<div id="allCourses" class="course-grid"></div>
+</div>
+</section>
+
+<section id="mycourses" class="section">
+<div class="container">
+<div class="section-header"><h2>My Learning Dashboard</h2><p id="myLearningSub">Your enrolled courses and progress</p></div>
+<div id="myCoursesGrid" class="course-grid"></div>
+<div id="emptyMyCourses" class="empty-state"><i class="fas fa-book-open"></i><h3>No courses yet</h3><p>Enroll in a course to start learning</p><button class="btn-primary" onclick="showSection('courses')">Browse Courses</button></div>
+</div>
+</section>
+
+<div id="courseModal" class="modal"><div class="modal-content detail-modal"><span class="close" onclick="closeModal('courseModal')">&times;</span><div id="courseDetailContent" style="display:contents"></div></div></div>
+
+<div id="lessonModal" class="modal"><div class="modal-content lesson-modal"><span class="close" onclick="closeModal('lessonModal')">&times;</span>
+<div class="lesson-layout">
+<div class="lesson-video"><div class="video-placeholder"><i class="fas fa-play-circle"></i><p>Video Player - Lesson Content</p><small>Spring MVC + Video.js Ready</small></div><h3 id="currentLessonTitle"></h3><p id="currentLessonDesc"></p></div>
+<div class="lesson-sidebar"><h4><span id="detailCourseTitle2"></span> - <span id="modalProgressText">0%</span></h4><div class="progress-bar small"><div id="modalProgressBar" class="progress-fill"></div></div><div id="lessonList"></div><button id="certificateBtn" class="btn-primary full" style="display:none" onclick="generateCertificate()">Get Certificate</button></div>
+</div></div></div>
+
+<div id="loginModal" class="modal"><div class="modal-content small-modal"><span class="close" onclick="closeModal('loginModal')">&times;</span><h2>Student Login</h2><p class="muted">Mock Authentication</p><input id="loginName" placeholder="Enter your name (Divya)" class="input"><input id="loginEmail" placeholder="Email (optional)" class="input"><button class="btn-primary full" onclick="doLogin()">Continue Learning</button></div></div>
+
+<div id="certModal" class="modal"><div class="modal-content cert-modal"><span class="close" onclick="closeModal('certModal')">&times;</span>
+<div id="certificate" class="certificate"><div class="cert-border"><i class="fas fa-award cert-icon"></i><h1>Certificate of Completion</h1><p>This is proudly presented to</p><h2 id="certName">Divya Chikkudu</h2><p>for successfully completing</p><h3 id="certCourse">Full Stack Java</h3><div class="cert-meta"><div><span>Instructor</span><strong id="certInstructor"></strong></div><div><span>Date</span><strong id="certDate"></strong></div><div><span>ID</span><strong id="certId"></strong></div></div><div class="cert-footer"><div class="sign"><strong>LearnVerse</strong></div><div class="sign"><strong>Unified Mentor</strong></div></div></div></div>
+<button class="btn-primary" onclick="downloadCertificate()">Download Certificate</button></div></div>
+
+<div id="adminModal" class="modal"><div class="modal-content small-modal"><span class="close" onclick="closeModal('adminModal')">&times;</span><h2>Admin Panel</h2><p class="muted">Add / Edit Courses</p><input id="adminTitle" placeholder="Course Title" class="input"><input id="adminCat" placeholder="Category" class="input"><input id="adminDuration" placeholder="Duration" class="input"><input id="adminImage" placeholder="Image URL" class="input"><button class="btn-primary full" onclick="addCourseByAdmin()">+ Add Course</button><div id="adminList" style="margin-top:15px;max-height:200px;overflow:auto"></div></div></div>
+
+<div id="toast" class="toast"></div>
+<footer class="footer"><p><strong>LearnVerse</strong> © 2026 | FSJ Online Learning Platform | By Divya Chikkudu | HTML, CSS, JS, Spring MVC Ready, LocalStorage</p></footer>
+<script src="script.js"></script>
+</body>
+</html>
